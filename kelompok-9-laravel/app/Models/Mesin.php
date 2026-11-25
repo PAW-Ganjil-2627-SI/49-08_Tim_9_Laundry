@@ -13,7 +13,9 @@ class Mesin extends Model
         'status', 'perawatan_terakhir', 'catatan',
     ];
 
-    protected $casts = ['perawatan_terakhir' => 'date'];
+    protected $casts = [
+        'perawatan_terakhir' => 'date',
+    ];
 
     public const JENIS = [
         'mesin_cuci' => 'Mesin Cuci',

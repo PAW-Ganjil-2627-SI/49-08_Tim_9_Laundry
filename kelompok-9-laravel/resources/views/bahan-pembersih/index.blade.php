@@ -2,115 +2,233 @@
 
 @section('title', 'Bahan Pembersih')
 
-@push('styles')
-<style>
-    main h1 { margin: 0 0 16px; font-size: 24px; font-weight: bold; }
-    .stats { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-    .stat { background: #fff; padding: 12px 18px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-    .stat b { display: block; font-size: 22px; }
-    .toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-    .toolbar form { display: flex; gap: 8px; flex: 1; }
-    .toolbar input[type=text], .toolbar select { padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; }
-    .toolbar input[type=text] { flex: 1; }
-    .btn { padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 14px; color: #fff; background: #4f46e5; display: inline-block; }
-    .btn-warning { background: #f59e0b; }
-    .btn-danger { background: #dc2626; }
-    .btn-secondary { background: #6b7280; }
-    .alert { background: #d1fae5; color: #065f46; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eee; vertical-align: top; }
-    th { background: #eef0f6; }
-    .aksi { display: flex; gap: 6px; }
-    .empty { text-align: center; color: #888; padding: 24px; }
-    .badge { padding: 2px 8px; border-radius: 999px; font-size: 12px; }
-    .st-aman { background: #d1fae5; color: #065f46; }
-    .st-menipis { background: #fef3c7; color: #92400e; }
-    .st-habis { background: #fee2e2; color: #991b1b; }
-</style>
-@endpush
-
 @section('content')
-    <h1>Bahan Pembersih</h1>
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-flask"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Bahan Pembersih</h1>
+                    <p class="text-xs text-slate-500 mt-0.5">Pantau persediaan stok deterjen, pelembut, pewangi, dan pemutih pakaian</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('bahan-pembersih.create') }}" 
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-indigo-500/30 transition duration-150">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>Tambah Bahan</span>
+            </a>
+        </div>
+    </div>
 
+    <!-- Alert Notifications -->
     @if (session('success'))
-        <div class="alert">{{ session('success') }}</div>
+        <div class="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-800 flex items-center gap-3 shadow-xs">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 text-sm">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div class="text-sm font-medium">{{ session('success') }}</div>
+        </div>
     @endif
 
-    <div class="stats">
-        <div class="stat"><b>{{ $total }}</b> Total bahan</div>
-        <div class="stat"><b>{{ $menipis }}</b> Stok menipis</div>
-        <div class="stat"><b>{{ $habis }}</b> Stok habis</div>
+    @if (session('error'))
+        <div class="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-100 text-rose-800 flex items-center gap-3 shadow-xs">
+            <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center flex-shrink-0 text-sm">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="text-sm font-medium">{{ session('error') }}</div>
+        </div>
+    @endif
+
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition duration-200 flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Bahan</p>
+                <h3 class="text-2xl font-black text-slate-800 mt-1">{{ $total ?? 0 }}</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Item pembersih terdata</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-blue-500 text-white flex items-center justify-center text-xl shadow-md shadow-indigo-500/20">
+                <i class="fa-solid fa-bottle-droplet"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition duration-200 flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stok Menipis</p>
+                <h3 class="text-2xl font-black text-amber-600 mt-1">{{ $menipis ?? 0 }}</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Perlu segera restock</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-500 text-white flex items-center justify-center text-xl shadow-md shadow-amber-500/20">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition duration-200 flex items-center justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stok Habis</p>
+                <h3 class="text-2xl font-black text-rose-600 mt-1">{{ $habis ?? 0 }}</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Persediaan kosong</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500 to-red-500 text-white flex items-center justify-center text-xl shadow-md shadow-rose-500/20">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+        </div>
     </div>
 
-    <div class="toolbar">
-        <form action="{{ route('bahan-pembersih.index') }}" method="GET">
-            <input type="text" name="q" value="{{ $q }}" placeholder="Cari nama bahan...">
-            <select name="jenis">
-                <option value="">Semua jenis</option>
-                @foreach (\App\Models\BahanPembersih::JENIS as $val => $label)
-                    <option value="{{ $val }}" {{ $jenis === $val ? 'selected' : '' }}>{{ $label }}</option>
-                @endforeach
-            </select>
-            <button type="submit" class="btn">Cari</button>
-            @if ($q || $jenis)
-                <a href="{{ route('bahan-pembersih.index') }}" class="btn btn-secondary">Reset</a>
-            @endif
+    <!-- Search & Filter Bar -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs mb-6">
+        <form action="{{ route('bahan-pembersih.index') }}" method="GET" class="flex flex-col sm:flex-row items-center gap-3">
+            <div class="relative flex-1 w-full">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </span>
+                <input type="text" name="q" value="{{ $q ?? '' }}" 
+                       placeholder="Cari nama bahan pembersih..."
+                       class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+            </div>
+
+            <div class="w-full sm:w-56">
+                <select name="jenis" 
+                        class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition">
+                    <option value="">Semua Jenis</option>
+                    @if (class_exists(\App\Models\BahanPembersih::class))
+                        @foreach (\App\Models\BahanPembersih::JENIS as $val => $label)
+                            <option value="{{ $val }}" {{ ($jenis ?? '') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    @else
+                        <option value="deterjen">Deterjen</option>
+                        <option value="pelembut">Pelembut</option>
+                        <option value="pewangi">Pewangi</option>
+                        <option value="pemutih">Pemutih</option>
+                        <option value="lainnya">Lainnya</option>
+                    @endif
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <button type="submit" 
+                        class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold transition">
+                    <i class="fa-solid fa-filter text-xs"></i>
+                    <span>Filter</span>
+                </button>
+                @if (($q ?? false) || ($jenis ?? false))
+                    <a href="{{ route('bahan-pembersih.index') }}" 
+                       class="inline-flex items-center justify-center px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-semibold transition"
+                       title="Reset Filter">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </a>
+                @endif
+            </div>
         </form>
-        <a href="{{ route('bahan-pembersih.create') }}" class="btn">+ Tambah Bahan</a>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Nama Bahan</th>
-                <th>Jenis</th>
-                <th>Stok</th>
-                <th>Stok Min.</th>
-                <th>Harga Satuan</th>
-                <th>Status</th>
-                <th>Catatan</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($bahan as $b)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $b->nama_bahan }}</td>
-                    <td>{{ \App\Models\BahanPembersih::JENIS[$b->jenis] ?? $b->jenis }}</td>
-                    <td>{{ (float) $b->stok }} {{ $b->satuan }}</td>
-                    <td>{{ (float) $b->stok_minimum }} {{ $b->satuan }}</td>
-                    <td>Rp {{ number_format($b->harga_satuan, 0, ',', '.') }}</td>
-                    <td>
-                        @if ($b->stok <= 0)
-                            <span class="badge st-habis">Habis</span>
-                        @elseif ($b->is_menipis)
-                            <span class="badge st-menipis">Menipis</span>
-                        @else
-                            <span class="badge st-aman">Aman</span>
-                        @endif
-                    </td>
-                    <td>{{ $b->catatan ?? '-' }}</td>
-                    <td>
-                        <div class="aksi">
-                            <a href="{{ route('bahan-pembersih.edit', $b) }}" class="btn btn-warning">Edit</a>
-                            <form action="{{ route('bahan-pembersih.destroy', $b) }}" method="POST"
-                                  onsubmit="return confirm('Yakin hapus bahan ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Hapus</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="9" class="empty">
-                        {{ ($q || $jenis) ? 'Tidak ada data yang cocok.' : 'Belum ada data bahan pembersih.' }}
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+    <!-- Data Table Card -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        <th class="py-3.5 px-4 w-12 text-center">#</th>
+                        <th class="py-3.5 px-4">Nama Bahan</th>
+                        <th class="py-3.5 px-4">Jenis</th>
+                        <th class="py-3.5 px-4">Sisa Stok</th>
+                        <th class="py-3.5 px-4">Stok Minimum</th>
+                        <th class="py-3.5 px-4">Harga Satuan</th>
+                        <th class="py-3.5 px-4">Status</th>
+                        <th class="py-3.5 px-4">Catatan</th>
+                        <th class="py-3.5 px-4 text-center w-28">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm">
+                    @forelse ($bahan ?? [] as $b)
+                        <tr class="hover:bg-indigo-50/20 transition duration-150">
+                            <td class="py-3.5 px-4 text-center font-bold text-slate-400 text-xs">{{ $loop->iteration }}</td>
+                            <td class="py-3.5 px-4 font-semibold text-slate-900">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs flex-shrink-0">
+                                        <i class="fa-solid fa-flask"></i>
+                                    </div>
+                                    <span>{{ $b->nama_bahan }}</span>
+                                </div>
+                            </td>
+                            <td class="py-3.5 px-4 text-slate-600">
+                                {{ class_exists(\App\Models\BahanPembersih::class) ? (\App\Models\BahanPembersih::JENIS[$b->jenis] ?? $b->jenis) : $b->jenis }}
+                            </td>
+                            <td class="py-3.5 px-4 font-bold text-slate-800">
+                                {{ (float) $b->stok }} <span class="text-xs font-normal text-slate-400">{{ $b->satuan }}</span>
+                            </td>
+                            <td class="py-3.5 px-4 text-slate-500 text-xs font-medium">
+                                {{ (float) $b->stok_minimum }} {{ $b->satuan }}
+                            </td>
+                            <td class="py-3.5 px-4 text-slate-700 font-semibold text-xs">
+                                Rp {{ number_format($b->harga_satuan, 0, ',', '.') }}
+                            </td>
+                            <td class="py-3.5 px-4">
+                                @if ($b->stok <= 0)
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                        <span>Habis</span>
+                                    </span>
+                                @elseif ($b->is_menipis)
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span>Menipis</span>
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        <span>Aman</span>
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="py-3.5 px-4 text-slate-500 text-xs max-w-xs truncate" title="{{ $b->catatan }}">
+                                {{ $b->catatan ?: '-' }}
+                            </td>
+                            <td class="py-3.5 px-4 text-center">
+                                <div class="inline-flex items-center gap-1">
+                                    <a href="{{ route('bahan-pembersih.edit', $b) }}" 
+                                       class="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                                       title="Edit Bahan">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <form action="{{ route('bahan-pembersih.destroy', $b) }}" method="POST" 
+                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus bahan {{ $b->nama_bahan }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                                                title="Hapus Bahan">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="py-12 text-center">
+                                <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl mb-3">
+                                    <i class="fa-solid fa-flask-vial"></i>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-700">Bahan Pembersih Tidak Ditemukan</h4>
+                                <p class="text-xs text-slate-400 mt-1">
+                                    {{ (($q ?? false) || ($jenis ?? false)) ? 'Tidak ada bahan yang cocok dengan kriteria filter.' : 'Belum ada data bahan pembersih yang terdaftar.' }}
+                                </p>
+                                @if (!(($q ?? false) || ($jenis ?? false)))
+                                    <a href="{{ route('bahan-pembersih.create') }}" class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition">
+                                        <i class="fa-solid fa-plus"></i> Tambah Bahan Pertama
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection

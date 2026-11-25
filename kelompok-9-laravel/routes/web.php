@@ -8,7 +8,7 @@ use App\Http\Controllers\PelangganController;
 use Illuminate\Support\Facades\Route;
 
 // Halaman utama: arahkan sesuai status login
-Route::get('/', fn () => redirect()->route(auth()->check() ? 'layanan.index' : 'login'));
+Route::get('/', fn () => redirect()->route(auth()->check() ? 'pelanggan.index' : 'login'));
 
 // Hanya untuk yang BELUM login
 Route::middleware('guest')->group(function () {
@@ -26,4 +26,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('mesin', MesinController::class)->except(['show']);
     Route::resource('pelanggan', PelangganController::class)->except(['show']);
     Route::resource('bahan-pembersih', BahanPembersihController::class)->except(['show']);
+    Route::get('/bahan', [BahanPembersihController::class, 'index']);
 });

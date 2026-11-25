@@ -20,15 +20,21 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        try {
+            if (Auth::attempt($credentials, $request->boolean('remember'))) {
+                $request->session()->regenerate();
 
-            return redirect()->intended(route('layanan.index'));
+                return redirect()->intended(route('pelanggan.index'));
+            }
+
+            return back()
+                ->withErrors(['email' => 'Email atau password salah.'])
+                ->onlyInput('email');
+        } catch (\Throwable $e) {
+            return back()
+                ->withErrors(['email' => 'Gagal login. Pastikan database sudah dimigrasi (php artisan migrate). Error: ' . $e->getMessage()])
+                ->onlyInput('email');
         }
-
-        return back()
-            ->withErrors(['email' => 'Email atau password salah.'])
-            ->onlyInput('email');
     }
 
     public function showRegister()
@@ -44,12 +50,18 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create($data);
+        try {
+            $user = User::create($data);
 
-        Auth::login($user);
-        $request->session()->regenerate();
+            Auth::login($user);
+            $request->session()->regenerate();
 
-        return redirect()->route('layanan.index');
+            return redirect()->route('pelanggan.index');
+        } catch (\Throwable $e) {
+            return back()
+                ->withErrors(['email' => 'Gagal mendaftar. Pastikan database sudah dimigrasi (php artisan migrate). Error: ' . $e->getMessage()])
+                ->withInput();
+        }
     }
 
     public function logout(Request $request)

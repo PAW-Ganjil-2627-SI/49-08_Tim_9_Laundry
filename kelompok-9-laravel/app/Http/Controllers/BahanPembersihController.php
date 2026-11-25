@@ -13,16 +13,24 @@ class BahanPembersihController extends Controller
         $q     = $request->query('q');
         $jenis = $request->query('jenis');
 
-        $bahan = BahanPembersih::when($q, fn ($query) =>
-                $query->where('nama_bahan', 'like', "%{$q}%"))
-            ->when($jenis, fn ($query) =>
-                $query->where('jenis', $jenis))
-            ->latest()
-            ->get();
+        try {
+            $bahan = BahanPembersih::when($q, fn ($query) =>
+                    $query->where('nama_bahan', 'like', "%{$q}%"))
+                ->when($jenis, fn ($query) =>
+                    $query->where('jenis', $jenis))
+                ->latest()
+                ->get();
 
-        $total   = BahanPembersih::count();
-        $menipis = BahanPembersih::whereColumn('stok', '<=', 'stok_minimum')->count();
-        $habis   = BahanPembersih::where('stok', '<=', 0)->count();
+            $total   = BahanPembersih::count();
+            $menipis = BahanPembersih::whereColumn('stok', '<=', 'stok_minimum')->count();
+            $habis   = BahanPembersih::where('stok', '<=', 0)->count();
+        } catch (\Throwable $e) {
+            $bahan   = collect();
+            $total   = 0;
+            $menipis = 0;
+            $habis   = 0;
+            session()->flash('error', 'Tabel bahan pembersih belum tersedia di database. Jalankan: php artisan migrate');
+        }
 
         return view('bahan-pembersih.index', compact('bahan', 'q', 'jenis', 'total', 'menipis', 'habis'));
     }

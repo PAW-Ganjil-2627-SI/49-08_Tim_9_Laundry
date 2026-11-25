@@ -11,14 +11,22 @@ class LayananController extends Controller
     {
         $q = $request->query('q');
 
-        $layanan = Layanan::when($q, fn ($query) =>
-                $query->where('nama_layanan', 'like', "%{$q}%"))
-            ->latest()
-            ->get();
+        try {
+            $layanan = Layanan::when($q, fn ($query) =>
+                    $query->where('nama_layanan', 'like', "%{$q}%"))
+                ->latest()
+                ->get();
 
-        $total  = Layanan::count();
-        $aktif  = Layanan::where('is_aktif', true)->count();
-        $termurah = Layanan::min('tarif') ?? 0;
+            $total    = Layanan::count();
+            $aktif    = Layanan::where('is_aktif', true)->count();
+            $termurah = Layanan::min('tarif') ?? 0;
+        } catch (\Throwable $e) {
+            $layanan  = collect();
+            $total    = 0;
+            $aktif    = 0;
+            $termurah = 0;
+            session()->flash('error', 'Tabel layanan belum tersedia di database. Jalankan: php artisan migrate');
+        }
 
         return view('layanan.index', compact('layanan', 'q', 'total', 'aktif', 'termurah'));
     }

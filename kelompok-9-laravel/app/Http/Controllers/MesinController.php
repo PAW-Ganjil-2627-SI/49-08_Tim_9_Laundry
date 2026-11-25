@@ -13,16 +13,24 @@ class MesinController extends Controller
         $q      = $request->query('q');
         $status = $request->query('status');
 
-        $mesin = Mesin::when($q, fn ($query) =>
-                $query->where('nama_mesin', 'like', "%{$q}%"))
-            ->when($status, fn ($query) =>
-                $query->where('status', $status))
-            ->latest()
-            ->get();
+        try {
+            $mesin = Mesin::when($q, fn ($query) =>
+                    $query->where('nama_mesin', 'like', "%{$q}%"))
+                ->when($status, fn ($query) =>
+                    $query->where('status', $status))
+                ->latest()
+                ->get();
 
-        $total      = Mesin::count();
-        $tersedia   = Mesin::where('status', 'tersedia')->count();
-        $bermasalah = Mesin::whereIn('status', ['perawatan', 'rusak'])->count();
+            $total      = Mesin::count();
+            $tersedia   = Mesin::where('status', 'tersedia')->count();
+            $bermasalah = Mesin::whereIn('status', ['perawatan', 'rusak'])->count();
+        } catch (\Throwable $e) {
+            $mesin      = collect();
+            $total      = 0;
+            $tersedia   = 0;
+            $bermasalah = 0;
+            session()->flash('error', 'Tabel mesin belum tersedia di database. Jalankan: php artisan migrate');
+        }
 
         return view('mesin.index', compact('mesin', 'q', 'status', 'total', 'tersedia', 'bermasalah'));
     }

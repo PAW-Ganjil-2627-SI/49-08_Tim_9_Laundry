@@ -3,7 +3,7 @@
 Tugas Pengembangan Aplikasi Website (BBK2DAB3), Studi Kasus 09.
 Dibuat dengan **PHP murni (native)** dan MySQL, tanpa framework.
 
-Modul A: Layanan & Tarif
+## Modul A: Layanan & Tarif
 
 Pengelolaan jenis layanan laundry beserta tarifnya.
 

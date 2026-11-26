@@ -13,6 +13,9 @@ Fitur:
 - Validasi: nama layanan dan tarif wajib diisi, tarif harus berupa angka lebih dari 0
 - RESTful API (JSON)
 
+Dikerjakan oleh: Aura Effel (102022500290)
+File terkait: `LayananController`, model `Layanan`, `resources/views/layanan/`, migrasi `create_layanans_table`
+
 ## Modul B: Mesin & Peralatan
 
 Pengelolaan data mesin cuci, pengering, setrika, dan peralatan pendukung.

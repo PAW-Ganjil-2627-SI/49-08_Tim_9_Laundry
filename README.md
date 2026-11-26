@@ -3,6 +3,27 @@
 Tugas Pengembangan Aplikasi Website (BBK2DAB3), Studi Kasus 09.
 Dibuat dengan **PHP murni (native)** dan MySQL, tanpa framework.
 
+Modul A: Layanan & Tarif
+
+Pengelolaan jenis layanan laundry beserta tarifnya.
+
+Fitur:
+- Tabel data layanan (cuci kiloan, cuci satuan, setrika, dll.)
+- Tambah, ubah, dan hapus layanan (form)
+- Validasi: nama layanan dan tarif wajib diisi, tarif harus berupa angka lebih dari 0
+- RESTful API (JSON)
+
+## Modul B: Mesin & Peralatan
+
+Pengelolaan data mesin cuci, pengering, setrika, dan peralatan pendukung.
+
+Fitur:
+- Tabel data mesin dan peralatan
+- Tambah, ubah, dan hapus data mesin (form)
+- Status mesin: aktif, rusak, atau dalam perawatan
+- Validasi: nama mesin dan status wajib diisi
+- RESTful API (JSON)
+
 ## Modul C: Data Pelanggan
 
 Pengelolaan biodata pelanggan, nomor telepon, dan catatan penanganan khusus pakaian.
@@ -13,6 +34,15 @@ Fitur:
 - Validasi: nama dan no. telepon wajib diisi, no. telepon tidak boleh kembar
 - RESTful API (JSON)
 
+## Modul D: Bahan Pembersih
+
+Pengelolaan stok deterjen, pelembut, pewangi, dan bahan pembersih lainnya.
+
+Fitur:
+- Tabel data bahan pembersih dan stok
+- Tambah, ubah, dan hapus bahan (form)
+- Validasi: nama bahan, satuan, dan stok wajib diisi, stok tidak boleh negatif
+- RESTful API (JSON)
 ## Anggota Kelompok
 
 | Modul | Nama |
